@@ -1,14 +1,13 @@
 class Api::ThreadsController < ApplicationController
   def index
-    #Post.threads.after(params[:cursor]).includes(:replies).recent
-    if admin_signed_in?
-      render plain: 'YES'
-    else
-      render plain: 'NO'
-    end
+    posts = Post.threads.after(params[:cursor]).includes(:replies).recent
+
+    render json: posts, include: 'replies'
   end
 
   def show
-    Post.find(params[:id]).after(params[:cursor]).includes(:replies)
+    post = Post.find(params[:id])
+
+    render json: post, include: 'replies'
   end
 end

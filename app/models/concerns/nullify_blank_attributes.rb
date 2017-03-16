@@ -7,7 +7,7 @@ module NullifyBlankAttributes
 
   def nullify_blank_attributes
     attributes.each do |column, value|
-      self[column].blank? || self[column] = nil
+      self[column] = nil if self[column] == ''
     end
   end
 end

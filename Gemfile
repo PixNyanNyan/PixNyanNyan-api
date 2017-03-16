@@ -17,15 +17,13 @@ gem 'active_model_serializers', '~> 0.10.0'
 # Image upload
 gem 'paperclip', '~> 5.1.0'
 # Prevent bot
-gem 'recaptcha'
+gem 'recaptcha', require: 'recaptcha/rails'
 # Account management
 gem 'devise', '~> 4.2.0'
 gem 'rbnacl'
 gem 'jwt'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -19,7 +19,7 @@ class Post < ApplicationRecord
   has_many :replies, class_name: 'Post',
     foreign_key: 'parent_post_id', dependent: :destroy
   belongs_to :parent_post, class_name: 'Post',
-    foreign_key: 'parent_post_id'
+    foreign_key: 'parent_post_id', optional: true
 
   # checks before saving
   before_save :avoid_locked_record
@@ -34,8 +34,9 @@ class Post < ApplicationRecord
   validate :content_presence
 
   # scopes
+  default_scope { order(id: :asc) }
   scope :threads, -> { where(parent_post_id: nil) }
-  scope :recent, -> { order(id: :desc) }
+  scope :recent, -> { unscope(:order).order(id: :desc) }
   scope :after, -> cursor { where('id > ?', cursor || 0) }
 
   # generating hash for password

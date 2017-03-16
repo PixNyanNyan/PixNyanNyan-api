@@ -5,7 +5,6 @@ class PostSerializer < ActiveModel::Serializer
   attributes :locked, :is_admin, :created_at, :updated_at
   has_many :replies
 
-
   def image_url_small
     object.image.url(:small)
   end
