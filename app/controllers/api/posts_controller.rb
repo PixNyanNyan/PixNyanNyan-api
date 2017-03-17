@@ -5,19 +5,41 @@ class Api::PostsController < ApplicationController
   def create
     post = Post.new(post_params)
     post.ip = request.ip
-    post.is_admin = true if admin_signed_in?
-
+    post.admin = current_admin if admin_signed_in?
     post.save!
+
+    render json: post
   end
 
   def destroy
+    id = [params[:id]].flatten
+    id = id[0...10] if id.size > 10
     
+    posts = Post.find(id)
+
+    unless admin_signed_in?
+      unless params[:passwd].is_a?(String)
+        raise ActionController::BadRequest, 'params[:passwd] is not a string'
+      end
+      passwd = Post.gen_passwd(params[:passwd])
+      posts = Post.where(id: posts, delete_password: passwd)
+    end
+
+    ActiveRecord::Base.transaction do
+      if params[:del_pic]
+        posts.each{ |post| post.image.destroy }
+      else
+        posts.each{ |post| post.destroy! }
+      end
+    end
+
+    render json: posts
   end
 
   private
 
   def prevent_chubou
-    #raise('asd') unless verify_recaptcha
+    #verify_recaptcha!
   end
 
   def post_params

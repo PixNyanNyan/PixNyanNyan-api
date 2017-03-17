@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 20170316132532) do
 
   create_table "admins", force: :cascade do |t|
+    t.string   "display_name",                        null: false
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -31,6 +32,7 @@ ActiveRecord::Schema.define(version: 20170316132532) do
 
   create_table "posts", force: :cascade do |t|
     t.integer  "parent_post_id"
+    t.integer  "admin_id"
     t.string   "title"
     t.string   "author"
     t.string   "email"
@@ -40,7 +42,6 @@ ActiveRecord::Schema.define(version: 20170316132532) do
     t.string   "image_dimensions"
     t.string   "delete_password"
     t.boolean  "locked",             default: false
-    t.boolean  "is_admin",           default: false, null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "image_file_name"

@@ -8,6 +8,8 @@ class Admin::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
+    resource.update_login_info!(request.ip)
+
     render json: {accessToken: JWTWrapper.encode({"#{resource_name}_id" => resource.id})}
   end
 

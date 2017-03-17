@@ -3,6 +3,7 @@ class CreatePosts < ActiveRecord::Migration[5.0]
     create_table :posts do |t|
       # post relation
       t.integer  :parent_post_id
+      t.integer  :admin_id
 
       # post meta
       t.string :title
@@ -20,9 +21,8 @@ class CreatePosts < ActiveRecord::Migration[5.0]
       # post control
       t.string :delete_password
       t.boolean :locked,        default: false
-      t.boolean :is_admin,      default: false, null: false
 
-      t.timestamps
+      t.timestamps null: false
 
       # table index
       t.index :parent_post_id

@@ -5,7 +5,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use sqlite3 as the database for Active Record
@@ -17,11 +16,16 @@ gem 'active_model_serializers', '~> 0.10.0'
 # Image upload
 gem 'paperclip', '~> 5.1.0'
 # Prevent bot
-gem 'recaptcha', require: 'recaptcha/rails'
+gem 'recaptcha'
 # Account management
 gem 'devise', '~> 4.2.0'
 gem 'rbnacl'
 gem 'jwt'
+# Error handling
+gem 'rambulance'
+# Request throttling
+gem 'rack-attack'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 

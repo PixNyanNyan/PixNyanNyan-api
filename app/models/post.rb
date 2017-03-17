@@ -20,17 +20,20 @@ class Post < ApplicationRecord
     foreign_key: 'parent_post_id', dependent: :destroy
   belongs_to :parent_post, class_name: 'Post',
     foreign_key: 'parent_post_id', optional: true
+  belongs_to :admin, optional: true
 
-  # checks before saving
-  before_save :avoid_locked_record
+  # callbacks
   before_save :generate_id_hash
-  before_save :touch_parent
+  before_create :avoid_locked_record
+  before_destroy :avoid_locked_record
+  after_save :touch_parent
   
-  # validates data
+  # validations
   validates :message, length: { maximum: MAX_POST_MESSAGE_WORDCOUNT }
   validates :title, length: { maximum: 200 }
   validates :author, length: { maximum: 200 }
   validates :email, length: { maximum: 200 }
+  validates :ip, presence: true
   validate :content_presence
 
   # scopes
@@ -39,12 +42,29 @@ class Post < ApplicationRecord
   scope :recent, -> { unscope(:order).order(id: :desc) }
   scope :after, -> cursor { where('id > ?', cursor || 0) }
 
-  # generating hash for password
+  def self.gen_passwd(passwd)
+    Digest::SHA1.base64digest(passwd)
+  end
+
+  def is_admin
+    admin_id.present?
+  end
+
   def delete_password=(passwd)
-    self[:delete_password] = passwd.blank? ? nil : Digest::SHA1.base64digest(passwd)
+    self[:delete_password] = passwd.blank? ? nil : self.class.gen_passwd(passwd)
   end
   
   protected
+
+  ## Validators
+
+  def content_presence
+    if message.blank? && image.blank?
+      errors.add(:message, 'Message and Image are both empty')
+    end
+  end
+
+  ## Callbacks
 
   def touch_parent
     # touch parent on create if sage presents in email field
@@ -55,19 +75,15 @@ class Post < ApplicationRecord
 
   def generate_id_hash
     ip = self[:ip]
-    date = Time.current.to_date.to_s
-    hash = Digest::SHA1.base64digest(ip + date + ID_SALT)
+    date = Time.now.to_date.to_s
+    id_hash = Digest::SHA1.base64digest(ip + date + Rails.application.secrets.secret_key_base)
     
-    self[:identity_hash] = hash[0..8]
+    self[:identity_hash] = id_hash[0...8]
   end
 
   def avoid_locked_record
-    raise ActiveRecord::Rollback, "Record locked!" if self[:locked]
-  end
-
-  def content_presence
-    if message.blank? && image.blank?
-      errors.add(:message, 'Message and Image are both empty')
+    if self[:locked] || (parent_post && parent_post.locked)
+      raise ActiveRecord::Rollback, "Record locked!"
     end
   end
 
