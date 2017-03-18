@@ -46,6 +46,7 @@ class Api::PostsController < ApplicationController
     params.require(
         :post
       ).permit(
+        :parent_post_id,
         :title,
         :author,
         :email,

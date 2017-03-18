@@ -37,6 +37,8 @@ class Post < ApplicationRecord
   validates :author, length: { maximum: 200 }
   validates :email, length: { maximum: 200 }
   validates :ip, presence: true
+  validates :parent_post, presence: true, if: 'parent_post_id.present?'
+  validates :admin, presence: true, if: 'admin_id.present?'
   validate :content_presence
 
   # scopes

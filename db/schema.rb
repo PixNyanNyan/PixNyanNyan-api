@@ -12,22 +12,25 @@
 
 ActiveRecord::Schema.define(version: 20170316132532) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "admins", force: :cascade do |t|
-    t.string   "display_name",                        null: false
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "display_name",                           null: false
+    t.boolean  "super_admin",            default: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.index ["email"], name: "index_admins_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.index ["email"], name: "index_admins_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "posts", force: :cascade do |t|
@@ -48,8 +51,8 @@ ActiveRecord::Schema.define(version: 20170316132532) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.index ["parent_post_id"], name: "index_posts_on_parent_post_id"
-    t.index ["updated_at"], name: "index_posts_on_updated_at"
+    t.index ["parent_post_id"], name: "index_posts_on_parent_post_id", using: :btree
+    t.index ["updated_at"], name: "index_posts_on_updated_at", using: :btree
   end
 
 end
