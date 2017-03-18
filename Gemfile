@@ -25,9 +25,8 @@ gem 'jwt'
 gem 'rambulance'
 # Request throttling
 gem 'rack-attack'
-
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
+gem 'redis', '~> 3.0'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

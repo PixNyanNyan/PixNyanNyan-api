@@ -137,6 +137,7 @@ GEM
       ffi
     recaptcha (4.1.0)
       json
+    redis (3.3.3)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
     rspec-core (3.5.4)
@@ -196,6 +197,7 @@ DEPENDENCIES
   rambulance
   rbnacl
   recaptcha
+  redis (~> 3.0)
   rspec-rails (~> 3.5)
   spring
   spring-watcher-listen (~> 2.0.0)

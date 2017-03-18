@@ -6,9 +6,11 @@ class Admin::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
+    already_signed_in = admin_signed_in?
+
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
-    resource.update_login_info!(request.ip)
+    resource.update_login_info!(request.ip) unless already_signed_in
 
     render json: {accessToken: JWTWrapper.encode({"#{resource_name}_id" => resource.id})}
   end

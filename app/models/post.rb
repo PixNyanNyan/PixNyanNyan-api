@@ -23,10 +23,13 @@ class Post < ApplicationRecord
   belongs_to :admin, optional: true
 
   # callbacks
-  before_save :generate_id_hash
+  before_create :generate_id_hash
   before_create :avoid_locked_record
   before_destroy :avoid_locked_record
   after_save :touch_parent
+  after_create_commit -> { broadcast_to_everyone('create') }
+  after_update_commit -> { broadcast_to_everyone('update') }
+  after_destroy_commit -> { broadcast_to_everyone('destroy') }
   
   # validations
   validates :message, length: { maximum: MAX_POST_MESSAGE_WORDCOUNT }
@@ -95,5 +98,10 @@ class Post < ApplicationRecord
       geometry = Paperclip::Geometry.from_file(tempfile)
       self[:image_dimensions] = [geometry.width.to_i, geometry.height.to_i]
     end
+  end
+
+  def broadcast_to_everyone(action)
+    content = {action: action, obj: self}
+    ActionCable.server.broadcast('posts_channel', content)
   end
 end
