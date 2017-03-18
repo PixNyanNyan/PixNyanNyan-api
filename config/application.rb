@@ -27,12 +27,7 @@ module PixNyanNyanApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Throttling
+    # Throttling and blocking
     config.middleware.insert_before 0, Rack::Attack
-
-    # Disable cookie session
-    config.middleware.delete ActionDispatch::Cookies
-    config.middleware.delete ActionDispatch::Session::CookieStore
-    config.middleware.delete ActionDispatch::Flash
   end
 end
