@@ -23,4 +23,6 @@ test:
 
 production:
   <<: *default
+  host: db
+  username: postgres
   database: pixnyannyan_production

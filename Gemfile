@@ -19,14 +19,15 @@ gem 'paperclip', '~> 5.1.0'
 gem 'recaptcha'
 # Account management
 gem 'devise', '~> 4.2.0'
-#gem 'rbnacl'
+gem 'rbnacl-libsodium', require: 'rbnacl/libsodium'
 gem 'jwt'
 # Error handling
 gem 'rambulance'
 # Request throttling
 gem 'rack-attack'
-# Use Redis adapter to run Action Cable in production
+# Use Redis for ActionCable and cache_store
 gem 'redis', '~> 3.0'
+gem 'redis-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
