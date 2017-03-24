@@ -8,6 +8,6 @@ Rails.application.routes.draw do
   namespace :api do
     resource :posts, only: [:create, :destroy]
     resources :threads, only: [:index, :show]
-    get 'recaptcha', to: 'recaptcha#index'
+    get 'config', to: 'config#index'
   end
 end

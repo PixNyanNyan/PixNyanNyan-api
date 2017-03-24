@@ -103,7 +103,7 @@ class Post < ApplicationRecord
   end
 
   def broadcast_to_everyone(action)
-    content = {action: action, obj: self}
+    content = {action: action, obj: ApplicationController.render(json: self)}
     ActionCable.server.broadcast('posts_channel', content)
   end
 end
