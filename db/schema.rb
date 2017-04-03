@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20170316132532) do
   create_table "admins", force: :cascade do |t|
     t.string   "display_name",                           null: false
     t.boolean  "super_admin",            default: false
+    t.boolean  "enabled",                default: true
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
