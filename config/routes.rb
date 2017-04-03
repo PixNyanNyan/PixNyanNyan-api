@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :api do
     resource :posts, only: [:create, :destroy]
     resources :threads, only: [:index, :show]
+    resources :staffs, only: [:index, :update]
     get 'config', to: 'config#index'
   end
 end

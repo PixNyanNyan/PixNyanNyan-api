@@ -26,6 +26,7 @@ Rambulance.setup do |config|
   # the internal server error template and return 500 as http status.
   config.rescue_responses = {
     'ActiveRecord::RecordNotUnique' => :unprocessable_entity,
-    'Recaptcha::VerifyError'        => :bad_request
+    'Recaptcha::VerifyError'        => :bad_request,
+    'AccessForbidden'               => :forbidden
   }
 end

@@ -4,6 +4,7 @@ class DeviseCreateAdmins < ActiveRecord::Migration[5.0]
       ## Meta
       t.string :display_name,       null: false
       t.boolean :super_admin,       default: false
+      t.boolean :enabled,           default: true
 
       ## Database authenticatable
       t.string :email,              null: false, default: ""

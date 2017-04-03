@@ -1,17 +1,16 @@
 class Admin::SessionsController < Devise::SessionsController
-  # before_action :configure_sign_in_params, only: [:create]
   # GET /resource/sign_in
   def new  
   end
 
   # POST /resource/sign_in
   def create
-    unless admin_signed_in?
-      verify_recaptcha!
-      self.resource = warden.authenticate!(auth_options)
-      sign_in(resource_name, resource)
-      resource.update_login_info!(request.ip)
-    end
+    verify_recaptcha! unless admin_signed_in?
+
+    self.resource = warden.authenticate!(auth_options)
+    sign_in(resource_name, resource)
+
+    resource.update_login_info!(request.ip) if params[:admin]
 
     render json: {accessToken: JWTWrapper.encode({"#{resource_name}_id" => resource.id})}
   end
@@ -19,11 +18,4 @@ class Admin::SessionsController < Devise::SessionsController
   # DELETE /resource/sign_out
   def destroy
   end
-
-  # protected
-
-  # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_in_params
-  #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-  # end
 end
