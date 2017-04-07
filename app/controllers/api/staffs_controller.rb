@@ -6,6 +6,10 @@ class Api::StaffsController < ApplicationController
     render json: Admin.all
   end
 
+  def create
+    render json: Admin.create!(admin_params)
+  end
+
   def update
     admin = Admin.find(params[:id])
     render json: admin.update!(admin_params)
