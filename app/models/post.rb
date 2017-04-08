@@ -24,7 +24,8 @@ class Post < ApplicationRecord
 
   # callbacks
   before_create :generate_id_hash
-  before_create :avoid_locked_record
+  before_create :parse_tripcode
+  before_save :avoid_locked_record
   before_destroy :avoid_locked_record
   after_save :touch_parent
   after_create_commit -> { broadcast_to_everyone('create') }
@@ -84,6 +85,21 @@ class Post < ApplicationRecord
     id_hash = Digest::SHA1.base64digest(ip + date + Rails.application.secrets.secret_key_base)
     
     self[:identity_hash] = id_hash[0...8]
+  end
+
+  def parse_tripcode
+    author = self[:author].to_s
+    match = author.match(/\A(.*)#(.*)\z/)
+    if match.nil?
+      self[:tripcode] = nil
+      return
+    end
+
+    secret = match[-1].force_encoding(Encoding::ASCII_8BIT)
+    salt = "#{secret}H."[1..2]
+    salt.gsub!(/[^\.-z]/, '.')
+    salt.tr!(':-@[-`', 'A-Ga-f')
+    self[:tripcode] = secret.crypt(salt)[-10..-1]
   end
 
   def avoid_locked_record

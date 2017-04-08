@@ -1,5 +1,5 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :author, :email, :message, :identity_hash
+  attributes :id, :title, :author, :email, :message, :identity_hash, :tripcode
   attributes :locked, :is_admin, :created_at, :updated_at, :parent_post_id
   attribute(:image){ image_info }
   has_many :replies

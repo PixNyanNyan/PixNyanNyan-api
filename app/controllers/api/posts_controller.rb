@@ -1,6 +1,6 @@
 class Api::PostsController < ApplicationController
 
-  before_action :prevent_chubou, only: :create, unless: -> { admin_signed_in? }
+  before_action :prevent_chubou, unless: -> { admin_signed_in? }
 
   def create
     post = Post.new(post_params)
@@ -40,6 +40,10 @@ class Api::PostsController < ApplicationController
 
   def prevent_chubou
     verify_recaptcha!
+
+    if action_name == 'create'
+      # do some checks
+    end
   end
 
   def post_params
