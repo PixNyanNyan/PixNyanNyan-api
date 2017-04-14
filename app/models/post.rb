@@ -44,9 +44,30 @@ class Post < ApplicationRecord
 
   # scopes
   default_scope { order(id: :asc) }
+  scope :recent, -> { reorder(id: :desc) }
   scope :threads, -> { where(parent_post_id: nil) }
-  scope :recent, -> { unscope(:order).order(id: :desc) }
-  scope :after, -> cursor { where('id > ?', cursor || 0) }
+  scope :before, -> cursor { where('id < ?', cursor) if cursor.present? }
+  scope :after, -> cursor { where('id > ?', cursor) if cursor.present? }
+
+  def self.latest_replies(parents, limit)
+    return [] unless parents.present?
+
+    parent_ids = parents.map{|p| p.id}.join(',')
+    limit = limit.to_i
+    sql = <<-SQL
+      select * from posts
+      join lateral (
+        select * from posts p_inner
+        where p_inner.parent_post_id = posts.id
+        order by p_inner.id desc
+        limit #{limit}
+      ) ss on true
+      where posts.id in (#{parent_ids})
+      order by posts.id asc, ss.id asc
+    SQL
+
+    find_by_sql(sql).group_by{|x| x.parent_post_id}
+  end
 
   def self.gen_passwd(passwd)
     Digest::SHA1.base64digest(passwd)
@@ -73,8 +94,8 @@ class Post < ApplicationRecord
   ## Callbacks
 
   def touch_parent
-    # touch parent on create if sage presents in email field
-    if parent_post && new_record? && "sage".casecmp(self[:email].to_s) != 0
+    # touch parent on create if sage not present in email field
+    if parent_post && new_record? && "sage".casecmp(self[:email].to_s) == 0
       parent_post.touch
     end
   end
@@ -95,10 +116,12 @@ class Post < ApplicationRecord
       return
     end
 
-    secret = match[-1].force_encoding(Encoding::ASCII_8BIT)
+    secret = match[2].force_encoding(Encoding::ASCII_8BIT)
     salt = "#{secret}H."[1..2]
     salt.gsub!(/[^\.-z]/, '.')
     salt.tr!(':-@[-`', 'A-Ga-f')
+
+    self[:author] = match[1]
     self[:tripcode] = secret.crypt(salt)[-10..-1]
   end
 

@@ -28,6 +28,8 @@ gem 'rack-attack'
 # Use Redis for ActionCable and cache_store
 gem 'redis', '~> 3.0'
 gem 'redis-rails'
+# JSON encoder
+gem 'oj'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

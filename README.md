@@ -1,24 +1,25 @@
-# README
+# PixNyanNyan Backend API
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+## Get started with Docker
 
-* Ruby version
 
-* System dependencies
 
-* Configuration
+## API Endpoints
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Verb   | URI Pattern      | Controller#Action
+------ | ---------------- | -----------------
+GET    | /api/sign_in     | admin/sessions#new
+POST   | /api/sign_in     | admin/sessions#create
+DELETE | /api/sign_out    | admin/sessions#destroy
+POST   | /api/posts       | api/posts#create
+DELETE | /api/posts       | api/posts#destroy
+GET    | /api/threads     | api/threads#index
+GET    | /api/threads/:id | api/threads#show
+GET    | /api/staffs      | api/staffs#index
+POST   | /api/staffs      | api/staffs#create
+PATCH  | /api/staffs/:id  | api/staffs#update
+PUT    | /api/staffs/:id  | api/staffs#update
+GET    | /api/config      | api/config#index

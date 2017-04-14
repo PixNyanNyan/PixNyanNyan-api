@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407202301) do
+ActiveRecord::Schema.define(version: 20170414140727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20170407202301) do
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.index ["email"], name: "index_admins_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "posts", force: :cascade do |t|
@@ -53,7 +52,12 @@ ActiveRecord::Schema.define(version: 20170407202301) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "tripcode"
+    t.index ["admin_id"], name: "index_posts_on_admin_id", using: :btree
+    t.index ["identity_hash"], name: "index_posts_on_identity_hash", using: :btree
+    t.index ["ip"], name: "index_posts_on_ip", using: :btree
+    t.index ["parent_post_id", "id"], name: "index_posts_on_parent_post_id_and_id", using: :btree
     t.index ["parent_post_id"], name: "index_posts_on_parent_post_id", using: :btree
+    t.index ["tripcode"], name: "index_posts_on_tripcode", using: :btree
     t.index ["updated_at"], name: "index_posts_on_updated_at", using: :btree
   end
 
