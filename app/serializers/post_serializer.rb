@@ -1,6 +1,7 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :author, :email, :message, :identity_hash, :tripcode
-  attributes :locked, :is_admin, :created_at, :updated_at, :parent_post_id
+  attributes :id, :title, :author, :email, :message, :locked, :is_admin
+  attributes :identity_hash, :tripcode, :parent_post_id
+  attributes :reply_count, :created_at, :updated_at
   attribute(:image){ image_info }
   has_many(:replies){|s| s.reply_finder }
 

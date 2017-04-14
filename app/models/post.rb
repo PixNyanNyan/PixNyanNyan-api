@@ -18,8 +18,8 @@ class Post < ApplicationRecord
   # association
   has_many :replies, class_name: 'Post',
     foreign_key: 'parent_post_id', dependent: :destroy
-  belongs_to :parent_post, class_name: 'Post',
-    foreign_key: 'parent_post_id', optional: true
+  belongs_to :parent_post, class_name: 'Post', optional: true,
+    foreign_key: 'parent_post_id', counter_cache: :reply_count
   belongs_to :admin, optional: true
 
   # callbacks
