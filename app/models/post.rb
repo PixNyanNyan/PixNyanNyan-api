@@ -48,6 +48,7 @@ class Post < ApplicationRecord
   scope :threads, -> { where(parent_post_id: nil) }
   scope :before, -> cursor { where('id < ?', cursor) if cursor.present? }
   scope :after, -> cursor { where('id > ?', cursor) if cursor.present? }
+  scope :in_range, -> (lower, upper) { after(lower).before(upper) }
 
   def self.latest_replies(parents, limit)
     return [] unless parents.present?

@@ -5,7 +5,7 @@ application up and running.
 
 ## Get started with Docker
 
-
+Check out files in `deploy` folder for example docker-compose configuration.
 
 ## API Endpoints
 

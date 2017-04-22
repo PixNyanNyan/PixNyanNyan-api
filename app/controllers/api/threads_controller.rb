@@ -1,6 +1,6 @@
 class Api::ThreadsController < ApplicationController
   def index
-    posts = Post.recent.threads.before(params[:cursor]).limit(10)
+    posts = Post.recent.threads.in_range(params[:lower_limit], params[:upper_limit]).limit(10)
     replies = Post.latest_replies(posts, 5)
 
     render json: posts, replies: replies
@@ -8,7 +8,9 @@ class Api::ThreadsController < ApplicationController
 
   def show
     post = Post.find(params[:id])
-    replies = {post.id => post.replies.after(params[:cursor]).limit(10)}
+    replies = {
+      post.id => post.replies.in_range(params[:lower_limit], params[:upper_limit]).limit(10)
+    }
 
     render json: post, replies: replies
   end
