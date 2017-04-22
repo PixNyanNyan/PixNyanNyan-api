@@ -22,6 +22,7 @@
 
 # Ignore development env
 .env
+!/deploy/.env
 
 # Ignore paperclip storage
 /public/system*

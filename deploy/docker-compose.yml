@@ -6,8 +6,8 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - web-root:/usr/share/nginx/html
-      - nginx.conf:/etc/nginx/nginx.conf
+      - web-root:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: always
   app:
     image: atitan/pixnyannyan-api:latest
