@@ -53,7 +53,8 @@ class Api::PostsController < ApplicationController
         :email,
         :message,
         :image,
-        :delete_password
+        :delete_password,
+        :client_id
     )
   end
 end

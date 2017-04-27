@@ -3,6 +3,7 @@ class PostSerializer < ActiveModel::Serializer
   attributes :identity_hash, :tripcode, :parent_post_id
   attributes :reply_count, :created_at, :updated_at
   attribute(:image){ image_info }
+  attribute(:own_post){ client_matcher }
   has_many(:replies){|s| s.reply_finder }
 
   def image_info
@@ -21,5 +22,9 @@ class PostSerializer < ActiveModel::Serializer
   def reply_finder
     replies = instance_options[:replies] || []
     replies[object.id]
+  end
+
+  def client_matcher
+    object.client_id == instance_options[:client_id].to_s
   end
 end

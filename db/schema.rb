@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170414154948) do
+ActiveRecord::Schema.define(version: 20170427122503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20170414154948) do
     t.datetime "image_updated_at"
     t.string   "tripcode"
     t.integer  "reply_count"
+    t.string   "client_id"
     t.index ["admin_id"], name: "index_posts_on_admin_id", using: :btree
     t.index ["identity_hash"], name: "index_posts_on_identity_hash", using: :btree
     t.index ["ip"], name: "index_posts_on_ip", using: :btree

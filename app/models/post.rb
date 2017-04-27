@@ -37,6 +37,7 @@ class Post < ApplicationRecord
   validates :title, length: { maximum: 200 }
   validates :author, length: { maximum: 200 }
   validates :email, length: { maximum: 200 }
+  validates :client_id, length: { maximum: 128 }
   validates :ip, presence: true
   validates :parent_post, presence: true, if: 'parent_post_id.present?'
   validates :admin, presence: true, if: 'admin_id.present?'
