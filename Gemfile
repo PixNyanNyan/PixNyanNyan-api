@@ -18,7 +18,7 @@ gem 'paperclip', '~> 5.1.0'
 # Prevent bot
 gem 'recaptcha'
 # Account management
-gem 'devise', '~> 4.2.0'
+gem 'devise', '~> 4.2.1'
 gem 'rbnacl-libsodium', require: 'rbnacl/libsodium'
 gem 'jwt'
 # Error handling
