@@ -20,8 +20,8 @@ class Post < ApplicationRecord
     foreign_key: 'parent_post_id', dependent: :destroy
   belongs_to :parent_post, class_name: 'Post', optional: true,
     foreign_key: 'parent_post_id', counter_cache: :reply_count
+  has_many :complaints, dependent: :destroy
   belongs_to :admin, optional: true
-  has_many :complaints
 
   # callbacks
   before_create :generate_id_hash

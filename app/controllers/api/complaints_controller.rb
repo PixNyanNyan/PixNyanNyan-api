@@ -4,7 +4,9 @@ class Api::ComplaintsController < ApplicationController
   before_action :find_complaint, only: [:show, :update, :destroy]
 
   def index
-    Complaint.all
+    complaints = Complaint.open_case.recent
+
+    render json: complaints
   end
 
   def create
@@ -16,15 +18,15 @@ class Api::ComplaintsController < ApplicationController
   end
 
   def show
-    
+    render json: @complaint
   end
 
   def update
-    
+    render json: @complaint.update!(complaint_params)
   end
 
   def destroy
-    
+    render json: @complaint.destroy!
   end
 
   private
