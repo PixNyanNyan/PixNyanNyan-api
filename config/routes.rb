@@ -6,7 +6,9 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   namespace :api do
-    resource :posts, only: [:create, :destroy]
+    resource :posts, only: [:create, :destroy] do
+      get 'search'
+    end
     resources :threads, only: [:index, :show]
     resources :staffs, only: [:index, :create, :update]
     get 'config', to: 'config#index'

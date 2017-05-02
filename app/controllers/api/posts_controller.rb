@@ -1,6 +1,6 @@
 class Api::PostsController < ApplicationController
 
-  before_action :verify_recaptcha!, unless: -> { admin_signed_in? }
+  before_action :verify_recaptcha!, only: :create, unless: -> { admin_signed_in? }
   before_action :prevent_chubou, only: :create, unless: -> { admin_signed_in? }
 
   def create
@@ -37,10 +37,25 @@ class Api::PostsController < ApplicationController
     render json: posts
   end
 
+  def search
+    render json: apply_searchs, client_id: params[:client_id]
+  end
+
   private
 
   def prevent_chubou
 
+  end
+
+  def apply_searchs
+    scopes = [:by_identity_hash, :by_tripcode, :by_client_id, :by_content]
+    scopes.reject!{|scope| params[scope].blank? }
+
+    return [] if scopes.empty?
+
+    scopes.map!{|scope| [scope, params[scope]] }
+
+    Post.send_chain(scopes).in_range(params[:lower_limit], params[:upper_limit]).recent
   end
 
   def post_params
