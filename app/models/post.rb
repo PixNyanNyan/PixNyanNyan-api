@@ -50,6 +50,18 @@ class Post < ApplicationRecord
   scope :before, -> cursor { where('id < ?', cursor) if cursor.present? }
   scope :after, -> cursor { where('id > ?', cursor) if cursor.present? }
   scope :in_range, -> (lower, upper) { after(lower).before(upper) }
+  scope :by_identity_hash, -> keyword { where(identity_hash: keyword) }
+  scope :by_tripcode, -> keyword { where(tripcode: keyword) }
+  scope :by_client_id, -> keyword { where(client_id: keyword) }
+  scope :by_content, -> keyword {
+    where('title &? :s or author &? :s or email &? :s or message &? :s', s: keyword)
+  }
+
+  def self.send_chain(methods)
+    methods.inject(self) do |chain, scope|
+      chain.send(*scope)
+    end
+  end
 
   def self.latest_replies(parents, limit)
     return [] unless parents.present?

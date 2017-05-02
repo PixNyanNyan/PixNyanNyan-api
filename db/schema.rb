@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427122503) do
+ActiveRecord::Schema.define(version: 20170429171630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pgroonga"
 
   create_table "admins", force: :cascade do |t|
     t.string   "display_name",                           null: false
@@ -55,10 +56,16 @@ ActiveRecord::Schema.define(version: 20170427122503) do
     t.integer  "reply_count"
     t.string   "client_id"
     t.index ["admin_id"], name: "index_posts_on_admin_id", using: :btree
+    t.index ["author"], name: "index_posts_on_author", using: :pgroonga
+    t.index ["client_id"], name: "index_posts_on_client_id", using: :btree
+    t.index ["delete_password"], name: "index_posts_on_delete_password", using: :btree
+    t.index ["email"], name: "index_posts_on_email", using: :pgroonga
     t.index ["identity_hash"], name: "index_posts_on_identity_hash", using: :btree
     t.index ["ip"], name: "index_posts_on_ip", using: :btree
+    t.index ["message"], name: "index_posts_on_message", using: :pgroonga
     t.index ["parent_post_id", "id"], name: "index_posts_on_parent_post_id_and_id", using: :btree
     t.index ["parent_post_id"], name: "index_posts_on_parent_post_id", using: :btree
+    t.index ["title"], name: "index_posts_on_title", using: :pgroonga
     t.index ["tripcode"], name: "index_posts_on_tripcode", using: :btree
     t.index ["updated_at"], name: "index_posts_on_updated_at", using: :btree
   end
