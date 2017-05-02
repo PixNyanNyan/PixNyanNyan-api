@@ -48,7 +48,10 @@ class Api::PostsController < ApplicationController
   end
 
   def apply_searchs
-    scopes = [:by_identity_hash, :by_tripcode, :by_client_id, :by_content]
+    scopes = [
+      :by_identity_hash, :by_tripcode, :by_client_id,
+      :by_title, :by_author, :by_email, :by_message
+    ]
     scopes.reject!{|scope| params[scope].blank? }
 
     return [] if scopes.empty?

@@ -54,9 +54,10 @@ class Post < ApplicationRecord
   scope :by_identity_hash, -> keyword { where(identity_hash: keyword) }
   scope :by_tripcode, -> keyword { where(tripcode: keyword) }
   scope :by_client_id, -> keyword { where(client_id: keyword) }
-  scope :by_content, -> keyword {
-    where('title &? :s or author &? :s or email &? :s or message &? :s', s: keyword)
-  }
+  scope :by_title, -> keyword { where('title @@ ?', keyword) }
+  scope :by_author, -> keyword { where('author @@ ?', keyword) }
+  scope :by_email, -> keyword { where('email @@ ?', keyword) }
+  scope :by_message, -> keyword { where('message @@ ?', keyword) }
 
   def self.send_chain(methods)
     methods.inject(self) do |chain, scope|
