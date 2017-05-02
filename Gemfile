@@ -12,7 +12,7 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Serializer for JSON API
-gem 'active_model_serializers', '~> 0.10.0'
+gem 'active_model_serializers', '~> 0.10.6'
 # Image upload
 gem 'paperclip', '~> 5.1.0'
 # Prevent bot

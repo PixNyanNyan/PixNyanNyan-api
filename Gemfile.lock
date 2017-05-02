@@ -212,7 +212,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers (~> 0.10.0)
+  active_model_serializers (~> 0.10.6)
   byebug
   codeclimate-test-reporter (~> 1.0.0)
   devise (~> 4.2.1)
