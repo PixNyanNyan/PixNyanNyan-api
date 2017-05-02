@@ -1,0 +1,22 @@
+language: ruby
+sudo: required
+cache: bundler
+rvm:
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+install:
+  - curl --silent --location https://github.com/pgroonga/pgroonga/raw/master/data/travis/setup.sh | sh
+before_script:
+  - psql -c 'create database coursewiki_test;' -U postgres
+  - bin/rake db:migrate RAILS_ENV=test
+services:
+  - postgresql
+  - redis-server
+addons:
+  postgresql: 9.6
+  code_climate:
+    repo_token:
+      secure: "sXgx/GUbjckaRynVkyA/BjYikVbFWeOsS6yEHdwpBM6m3/rQSf9uCz15G/DLtBGl+uMZSIHTL8FTC4J3/dIfmLvw83dBH5olrLKiziiKzO9Qm0obp3fn4+AV0GRPZq/mFCwvxTdCtGQWPhlRi1H+bFhhn/d15P2CKO+UTUH6rM9Mte1nwexSgAFYwd0BKTDt7ln4RL+AnHQMMEkRD8vYwywvwMfWSPM1fSXHJSh8x1gzAgsmIxY6ozNQZ4aiKHSlSukijiYH/iD54gZliqpHKGKICcHTtwjDFgLJl1Rs0ehLCUK1nMGv4ryAOPnHvnF+YXkdxe7ngS3ofb61bcA5GDbXFrMYp6s2D5DeTj5XfG3wfmImGjxQ5iPv6MRHeIJEfE/v2GmnGDyN0TLxPV6XLFNIEBk+68VGi+v0uUMh134T9cILzexLBlMbaQbjuZaWzwIgtUOiV0ML2lzjHau98eMtTUEoA5PUwrSfw67iRmDJy8GQ0sBOzp9GXTM1NADgrDO6ix6EcV3znbAZJh53dgwALAEDzWyk/7sMyjJkupwb0pvTsvTwB4bBVKBsS1C8VRDHhW2CsSw3QcmgV35UgGJi8hVKse/ldiE4+tXYDqvhjKW91U7qQWvKY10F/cOyEAaC6t3aHBQVbYS0hjtMihn08h/VESq2jarc2joJyVI="
+after_success:
+  - bundle exec codeclimate-test-reporter

@@ -67,7 +67,7 @@ class Post < ApplicationRecord
   def self.latest_replies(parents, limit)
     return [] unless parents.present?
 
-    parent_ids = parents.map{|p| p.id}.join(',')
+    parent_ids = parents.map{|p| p.id.to_i }.join(',')
     limit = limit.to_i
     sql = <<-SQL
       select * from posts
@@ -76,9 +76,9 @@ class Post < ApplicationRecord
         where p_inner.parent_post_id = posts.id
         order by p_inner.id desc
         limit #{limit}
-      ) ss on true
+      ) p on true
       where posts.id in (#{parent_ids})
-      order by posts.id asc, ss.id asc
+      order by posts.id asc, p.id asc
     SQL
 
     find_by_sql(sql).group_by{|x| x.parent_post_id}

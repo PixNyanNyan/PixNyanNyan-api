@@ -1,25 +1,10 @@
 # PixNyanNyan Backend API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![Build Status](https://travis-ci.org/PixNyanNyan/PixNyanNyan-api.svg?branch=master)](https://travis-ci.org/PixNyanNyan/PixNyanNyan-api) [![Code Climate](https://codeclimate.com/github/PixNyanNyan/PixNyanNyan-api/badges/gpa.svg)](https://codeclimate.com/github/PixNyanNyan/PixNyanNyan-api) [![Test Coverage](https://codeclimate.com/github/PixNyanNyan/PixNyanNyan-api/badges/coverage.svg)](https://codeclimate.com/github/PixNyanNyan/PixNyanNyan-api/coverage)
 
 ## Get started with Docker
 
 Check out files in `deploy` folder for example docker-compose configuration.
 
-## API Endpoints
+## Usage
 
-Verb   | URI Pattern      | Controller#Action
------- | ---------------- | -----------------
-GET    | /api/sign_in     | admin/sessions#new
-POST   | /api/sign_in     | admin/sessions#create
-DELETE | /api/sign_out    | admin/sessions#destroy
-POST   | /api/posts       | api/posts#create
-DELETE | /api/posts       | api/posts#destroy
-GET    | /api/threads     | api/threads#index
-GET    | /api/threads/:id | api/threads#show
-GET    | /api/staffs      | api/staffs#index
-POST   | /api/staffs      | api/staffs#create
-PATCH  | /api/staffs/:id  | api/staffs#update
-PUT    | /api/staffs/:id  | api/staffs#update
-GET    | /api/config      | api/config#index
