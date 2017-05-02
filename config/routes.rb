@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     end
     resources :threads, only: [:index, :show]
     resources :staffs, only: [:index, :create, :update]
+    resources :complaints
     get 'config', to: 'config#index'
   end
 end
