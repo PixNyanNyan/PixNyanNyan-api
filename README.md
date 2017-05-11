@@ -6,5 +6,10 @@
 
 Check out files in `deploy` folder for example docker-compose configuration.
 
+If you had permission problem mounting local files into containers, it's usually related to SELinux enforcement.
+
+Try `setenforce 0` to see if problem solved. If it did, use `chcon -t svirt_sandbox_file_t *.conf` to fix the context.
+
 ## Usage
 
+See wiki for detailed API usage.
