@@ -1,6 +1,6 @@
 class Api::PostsController < ApplicationController
 
-  before_action :verify_recaptcha!, only: :create, unless: -> { admin_signed_in? }
+  before_action :verify_recaptcha!, only: :create, unless: -> { admin_signed_in? || ENV['BYPASS_RECAPTCHA'] }
   before_action :prevent_chubou, only: :create, unless: -> { admin_signed_in? }
 
   def create

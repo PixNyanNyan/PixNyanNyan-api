@@ -28,7 +28,6 @@ class Post < ApplicationRecord
   before_create :parse_tripcode
   before_save :avoid_locked_record
   before_destroy :avoid_locked_record
-  after_save :touch_parent
   after_create_commit -> { broadcast_to_everyone('create') }
   after_update_commit -> { broadcast_to_everyone('update') }
   after_destroy_commit -> { broadcast_to_everyone('destroy') }
@@ -108,13 +107,6 @@ class Post < ApplicationRecord
   end
 
   ## Callbacks
-
-  def touch_parent
-    # touch parent on create if sage not present in email field
-    if parent_post && new_record? && "sage".casecmp(self[:email].to_s) == 0
-      parent_post.touch
-    end
-  end
 
   def generate_id_hash
     ip = self[:ip]

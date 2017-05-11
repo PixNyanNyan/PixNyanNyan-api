@@ -5,7 +5,7 @@ class Admin::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    verify_recaptcha! unless admin_signed_in?
+    verify_recaptcha! unless admin_signed_in? || ENV['BYPASS_RECAPTCHA']
 
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
