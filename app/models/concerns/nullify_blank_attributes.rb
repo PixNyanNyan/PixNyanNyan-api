@@ -2,7 +2,7 @@ module NullifyBlankAttributes
   extend ActiveSupport::Concern
 
   included do
-    before_validation :nullify_blank_attributes
+    after_validation :nullify_blank_attributes
   end
 
   def nullify_blank_attributes

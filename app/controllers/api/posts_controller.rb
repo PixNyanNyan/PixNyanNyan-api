@@ -1,8 +1,5 @@
 class Api::PostsController < ApplicationController
-  before_action only: :create, unless: :admin_signed_in? do
-    verify_recaptcha!(env: ENV['BYPASS_RECAPTCHA'])
-  end
-  before_action :prevent_chubou, only: :create, unless: :admin_signed_in?
+  before_action :verify_recaptcha!, only: :create, unless: -> { admin_signed_in? || ENV['BYPASS_RECAPTCHA'] }
 
   def create
     post = Post.new(post_params)
@@ -43,10 +40,6 @@ class Api::PostsController < ApplicationController
   end
 
   private
-
-  def prevent_chubou
-
-  end
 
   def apply_searchs
     scopes = [

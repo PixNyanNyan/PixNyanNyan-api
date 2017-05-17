@@ -1,7 +1,5 @@
 class Api::ComplaintsController < ApplicationController
-  before_action only: :create do
-    verify_recaptcha!(env: ENV['BYPASS_RECAPTCHA'])
-  end
+  before_action :verify_recaptcha!, only: :create, unless: -> {ENV['BYPASS_RECAPTCHA']}
   before_action :authenticate_admin!, only: [:index, :show, :update, :destroy]
   before_action :find_complaint, only: [:show, :update, :destroy]
 

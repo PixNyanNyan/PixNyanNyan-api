@@ -24,8 +24,9 @@ class Post < ApplicationRecord
   belongs_to :admin, optional: true
 
   # callbacks
-  before_create :generate_id_hash
-  before_create :parse_tripcode
+  before_validation :generate_id_hash
+  before_validation :parse_tripcode
+  before_create :prevent_chubou
   before_save :avoid_locked_record
   before_destroy :avoid_locked_record
   after_create_commit -> { broadcast_to_everyone('create') }
@@ -39,8 +40,8 @@ class Post < ApplicationRecord
   validates :email, length: { maximum: 200 }
   validates :client_id, length: { maximum: 128 }
   validates :ip, presence: true
-  validates :parent_post, presence: true, if: 'parent_post_id.present?'
-  validates :admin, presence: true, if: 'admin_id.present?'
+  validates :admin, presence: true, if: -> { admin_id.present? }
+  validate :parent_post_presence, if: -> { parent_post_id.present? }
   validate :content_presence
 
   # scopes
@@ -100,9 +101,15 @@ class Post < ApplicationRecord
 
   ## Validators
 
+  def parent_post_presence
+    unless Post.threads.find_by(id: self[:parent_post_id])
+      errors.add(:parent_post_id, 'incorrect reference')
+    end
+  end
+
   def content_presence
     if message.blank? && image.blank?
-      errors.add(:message, 'Message and Image are both empty')
+      errors.add(:base, 'Message and image are both empty')
     end
   end
 
@@ -133,9 +140,25 @@ class Post < ApplicationRecord
     self[:tripcode] = secret.crypt(salt)[-10..-1]
   end
 
+  def prevent_chubou
+    if Blocklist.where('ip >>= ?', self[:ip]).size > 0
+      throw :abort
+    end
+
+    if client_id && Blocklist.where(client_id: client_id).size > 0
+      throw :abort
+    end
+
+    tempfile = image.queued_for_write[:original]
+    image_hash = tempfile.nil? ? nil : Digest::SHA1.file(tempfile).base64digest
+    if image_hash && Blocklist.where(image_hash: image_hash).size > 0
+      throw :abort
+    end
+  end
+
   def avoid_locked_record
-    if self[:locked] || (parent_post && parent_post.locked)
-      raise ActiveRecord::Rollback, "Record locked!"
+    if (!locked_changed? && locked) || (parent_post && parent_post.locked)
+      throw :abort
     end
   end
 

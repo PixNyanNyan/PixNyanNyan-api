@@ -4,6 +4,6 @@ class ExceptionsApp < Rambulance::ExceptionsApp
   end
 
   def json_error
-    render json: {error: exception.message}
+    render json: {error: "#{exception.class.name}: #{exception.message}"}
   end
 end
