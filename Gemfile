@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.2'
+gem 'rails', '~> 5.1.1'
 # Use pg as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -18,7 +18,7 @@ gem 'paperclip', '~> 5.1.0'
 # Prevent bot
 gem 'recaptcha'
 # Account management
-gem 'devise', '~> 4.2.1'
+gem 'devise', '~> 4.3.0'
 gem 'rbnacl-libsodium', require: 'rbnacl/libsodium'
 gem 'jwt'
 # Error handling

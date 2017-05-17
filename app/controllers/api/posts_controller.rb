@@ -1,7 +1,8 @@
 class Api::PostsController < ApplicationController
-
-  before_action :verify_recaptcha!, only: :create, unless: -> { admin_signed_in? || ENV['BYPASS_RECAPTCHA'] }
-  before_action :prevent_chubou, only: :create, unless: -> { admin_signed_in? }
+  before_action only: :create, unless: :admin_signed_in? do
+    verify_recaptcha!(env: ENV['BYPASS_RECAPTCHA'])
+  end
+  before_action :prevent_chubou, only: :create, unless: :admin_signed_in?
 
   def create
     post = Post.new(post_params)
@@ -51,14 +52,13 @@ class Api::PostsController < ApplicationController
     scopes = [
       :by_identity_hash, :by_tripcode, :by_client_id,
       :by_title, :by_author, :by_email, :by_message
-    ]
-    scopes.reject!{|scope| params[scope].blank? }
+    ].reject{|scope| params[scope].blank? }
 
     return [] if scopes.empty?
 
     scopes.map!{|scope| [scope, params[scope]] }
 
-    Post.send_chain(scopes).in_range(params[:lower_limit], params[:upper_limit]).recent
+    Post.send_chain(scopes).in_range(params[:lower_limit], params[:upper_limit]).recent.limit(10)
   end
 
   def post_params
