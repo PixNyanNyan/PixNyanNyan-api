@@ -149,8 +149,8 @@ class Post < ApplicationRecord
       throw :abort
     end
 
-    tempfile = image.queued_for_write[:original]
-    image_hash = tempfile.nil? ? nil : Digest::SHA1.file(tempfile).base64digest
+    image_file = image.staged_path || image.path
+    image_hash = image_file.nil? ? nil : Digest::SHA1.file(image_file).base64digest
     if image_hash && Blocklist.where(image_hash: image_hash).size > 0
       throw :abort
     end
