@@ -30,6 +30,8 @@ gem 'redis', '~> 3.0'
 gem 'redis-rails'
 # JSON encoder
 gem 'oj'
+# Image fingerprint
+gem 'phashion'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

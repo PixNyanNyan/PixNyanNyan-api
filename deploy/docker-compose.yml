@@ -24,7 +24,7 @@ services:
       - web-log:/pixnyannyan/log
     restart: always
   db:
-    image: atitan/pgroonga-docker:latest
+    image: atitan/pixnyannyan-postgres:latest
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: always

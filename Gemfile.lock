@@ -101,6 +101,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
     pg (0.20.0)
+    phashion (1.2.0)
     puma (3.8.2)
     rack (2.0.3)
     rack-attack (5.0.1)
@@ -222,6 +223,7 @@ DEPENDENCIES
   oj
   paperclip (~> 5.1.0)
   pg
+  phashion
   puma (~> 3.0)
   rack-attack
   rails (~> 5.1.1)

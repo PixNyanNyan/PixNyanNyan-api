@@ -1,9 +1,11 @@
 # Base our image on an official, minimal image of our preferred Ruby
-FROM ruby:2.4-alpine
+FROM ruby:2.4
 
 # Install essential Linux packages
-RUN apk update && apk upgrade
-RUN apk add build-base postgresql-dev postgresql-client tzdata file imagemagick
+RUN echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list && \
+    apt-get update && \
+    apt-get install -y build-essential file imagemagick tzdata libjpeg-dev libpng-dev && \
+    apt-get -t jessie-backports install -y postgresql-client-9.6 libpq-dev
 
 # Define where our application will live inside the image
 ENV RAILS_ROOT /pixnyannyan

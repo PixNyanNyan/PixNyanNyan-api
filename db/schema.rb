@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170517135534) do
+ActiveRecord::Schema.define(version: 20170520090831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pgroonga"
+  enable_extension "pg_phash"
 
   create_table "admins", id: :serial, force: :cascade do |t|
     t.string "display_name", null: false

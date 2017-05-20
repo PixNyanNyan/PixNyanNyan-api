@@ -141,24 +141,24 @@ class Post < ApplicationRecord
   end
 
   def prevent_chubou
-    if Blocklist.where('ip >>= ?', self[:ip]).size > 0
+    if Blocklist.ip?(self[:ip])
       throw :abort
     end
 
-    if client_id && Blocklist.where(client_id: client_id).size > 0
+    if Blocklist.client_id?(self[:client_id])
       throw :abort
     end
 
-    image_file = image.staged_path || image.path
-    image_hash = image_file.nil? ? nil : Digest::SHA1.file(image_file).base64digest
-    if image_hash && Blocklist.where(image_hash: image_hash).size > 0
+    image_file = image.staged_path
+    image_hash = image_file.nil? ? nil : Phashion::Image.new(image_file).fingerprint
+    if Blocklist.similar_image?(image_hash)
       throw :abort
     end
   end
 
   def avoid_locked_record
     if (!locked_changed? && locked) || (parent_post && parent_post.locked)
-      throw :abort
+      raise ActiveRecord::RecordNotSaved, 'Thread locked'
     end
   end
 
