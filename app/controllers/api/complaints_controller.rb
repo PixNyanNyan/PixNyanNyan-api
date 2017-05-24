@@ -4,7 +4,7 @@ class Api::ComplaintsController < ApplicationController
   before_action :find_complaint, only: [:show, :update, :destroy]
 
   def index
-    complaints = Complaint.open_case.recent
+    complaints = range_query(Complaint.open_case.recent)
 
     render json: complaints
   end

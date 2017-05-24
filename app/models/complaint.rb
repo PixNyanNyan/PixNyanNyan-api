@@ -1,6 +1,4 @@
 class Complaint < ApplicationRecord
-  include NullifyBlankAttributes
-
   belongs_to :post, optional: true
 
   validates :message, presence: true, length: { maximum: 500 }

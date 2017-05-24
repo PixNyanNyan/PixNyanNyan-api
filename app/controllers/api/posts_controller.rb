@@ -4,6 +4,7 @@ class Api::PostsController < ApplicationController
   def create
     post = Post.new(post_params)
     post.ip = request.ip
+    post.client_id = params[:client_id]
     post.admin = current_admin if admin_signed_in?
     post.save!
 
@@ -51,7 +52,7 @@ class Api::PostsController < ApplicationController
 
     scopes.map!{|scope| [scope, params[scope]] }
 
-    Post.send_chain(scopes).in_range(params[:lower_limit], params[:upper_limit]).recent.limit(10)
+    range_query(Post.send_chain(scopes))
   end
 
   def post_params
@@ -64,8 +65,7 @@ class Api::PostsController < ApplicationController
         :email,
         :message,
         :image,
-        :delete_password,
-        :client_id
+        :delete_password
     )
   end
 end

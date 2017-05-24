@@ -3,7 +3,7 @@ class Api::StaffsController < ApplicationController
   before_action :privilege_check
 
   def index
-    render json: Admin.all
+    render json: range_query(Admin)
   end
 
   def create

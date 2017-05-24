@@ -1,17 +1,15 @@
 class Post < ApplicationRecord
-  include NullifyBlankAttributes
-
   # image Attachment
   has_attached_file :image, {
     styles: { small: ['125x125>', :jpg], medium: ['250x250>', :jpg], original: '' },
-    convert_options: { 
+    convert_options: {
       small: '-quality 80 -interlace Plane -strip',
       medium: '-quality 80 -interlace Plane -strip',
       original: '-strip'
     }
   }
   validates_attachment_content_type :image, content_type: /\Aimage\/(png|gif|jpeg|pjpeg)\z/
-  validates_attachment_size :image, in: 0..MAX_IMAGE_KB_SIZE.kilobytes
+  validates_attachment_size :image, in: 0..MAX_IMAGE_SIZE
   serialize :image_dimensions
   before_save :extract_image_dimensions
 
@@ -48,9 +46,6 @@ class Post < ApplicationRecord
   default_scope { order(id: :asc) }
   scope :recent, -> { reorder(id: :desc) }
   scope :threads, -> { where(parent_post_id: nil) }
-  scope :before, -> cursor { where('id < ?', cursor) if cursor.present? }
-  scope :after, -> cursor { where('id > ?', cursor) if cursor.present? }
-  scope :in_range, -> (lower, upper) { after(lower).before(upper) }
   scope :by_identity_hash, -> keyword { where(identity_hash: keyword) }
   scope :by_tripcode, -> keyword { where(tripcode: keyword) }
   scope :by_client_id, -> keyword { where(client_id: keyword) }
@@ -142,17 +137,17 @@ class Post < ApplicationRecord
 
   def prevent_chubou
     if Blocklist.ip?(self[:ip])
-      throw :abort
+      raise ActiveRecord::RecordNotSaved, 'IP blocked'
     end
 
-    if Blocklist.client_id?(self[:client_id])
-      throw :abort
+    if Blocklist.client?(self[:client_id])
+      raise ActiveRecord::RecordNotSaved, 'Client blocked'
     end
 
     image_file = image.staged_path
     image_hash = image_file.nil? ? nil : Phashion::Image.new(image_file).fingerprint
-    if Blocklist.similar_image?(image_hash)
-      throw :abort
+    if Blocklist.image?(image_hash)
+      raise ActiveRecord::RecordNotSaved, 'Image blocked'
     end
   end
 

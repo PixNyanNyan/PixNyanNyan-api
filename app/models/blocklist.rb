@@ -1,15 +1,33 @@
 class Blocklist < ApplicationRecord
-  scope :valid_rule, -> { where('blocked_until > ?', Time.now) }
+  scope :valid_rules, -> { where('blocked_until > ?', Time.now) }
+
+  def self.rule_exist?(*params)
+    valid_rules.where(*params).size > 0
+  end
 
   def self.ip?(ip)
-    valid_rule.where('ip >>= ?', ip).size > 0
+    !ip.nil? && rule_exist?('ip >>= ?', ip)
   end
 
-  def self.client_id?(client_id)
-    !client_id.nil? && valid_rule.where(client_id: client_id).size > 0
+  def self.client?(client_id)
+    !client_id.nil? && rule_exist?(client_id: client_id)
   end
 
-  def self.similar_image?(image_hash)
-    !image_hash.nil? && valid_rule.where('phash_hamming(image_hash, ?) <= 15', image_hash.to_s).size > 0
+  def self.image?(image_hash)
+    stmt = 'phash_hamming(image_hash, ?) <= ?'
+    !image_hash.nil? && rule_exist?(stmt, image_hash.to_s, PHASH_THRESHOLD)
+  end
+
+  def self.create_from_post(id, options = {})
+    post = Post.find(id)
+
+    param = {
+      image_hash: Phashion::Image.new(image_file).fingerprint,
+      client_id: 123,
+      ip: 321,
+      blocked_until: 123
+    }
+
+    create!(param)
   end
 end
